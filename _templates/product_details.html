@@ -1,0 +1,89 @@
+{% extends '_mybase.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+
+    <!-- Breadcrumb Navigation -->
+    <div class="text-gray-500 text-sm mb-4">
+        <a href="/" class="hover:underline">Home</a> &gt; 
+        <a href="/products/" class="hover:underline">Products</a> &gt; 
+        <span class="text-gray-700">{{ product.name }}</span>
+    </div>
+
+    <!-- Main Product Details Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 bg-white shadow-lg rounded-lg overflow-hidden">
+        
+        <!-- Product Image Section -->
+        <div class="lg:col-span-1 p-6">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-auto max-h-80 object-contain rounded-lg shadow-md">
+            
+            <!-- Additional Images -->
+            <div class="grid grid-cols-5 gap-2 mt-4">
+                <img src="{{ product.image.url }}" class="w-full h-20 object-cover rounded-lg cursor-pointer">
+                <img src="{{ product.image.url }}" class="w-full h-20 object-cover rounded-lg cursor-pointer">
+                <img src="{{ product.image.url }}" class="w-full h-20 object-cover rounded-lg cursor-pointer">
+                <img src="{{ product.image.url }}" class="w-full h-20 object-cover rounded-lg cursor-pointer">
+                <img src="{{ product.image.url }}" class="w-full h-20 object-cover rounded-lg cursor-pointer">
+            </div>
+        </div>
+
+        <!-- Product Details Section -->
+        <div class="lg:col-span-2 p-6 space-y-6">
+            <!-- Product Name -->
+            <h1 class="text-3xl font-semibold text-gray-800">{{ product.name }}</h1>
+            <p class="text-lg text-gray-600">{{ product.description }}</p>
+
+            <!-- Price Information -->
+            <div class="space-y-2">
+                <p class="text-2xl font-bold text-yellow-500">₦{{ product.price }}</p>
+                {% if product.discount %}
+                <p class="text-lg line-through text-gray-500">₦{{ product.price|floatformat:2 }}</p>
+                <p class="text-xl font-semibold text-green-500">₦{{ product.discounted_price }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Quantity Selector -->
+            <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-2">
+                    <button class="text-lg text-gray-600 bg-gray-200 px-4 py-2 rounded-md focus:outline-none hover:bg-gray-300">-</button>
+                    <input type="number" value="1" class="w-14 text-center border-2 border-gray-300 rounded-md" min="1">
+                    <button class="text-lg text-gray-600 bg-gray-200 px-4 py-2 rounded-md focus:outline-none hover:bg-gray-300">+</button>
+                </div>
+            </div>
+
+            <!-- Add to Cart and Save for Later -->
+            <div class="flex space-x-4 mt-6">
+                <button class="bg-yellow-500 text-white py-3 px-8 rounded-md shadow-md hover:bg-yellow-600 focus:outline-none">Add to Cart</button>
+                <button class="text-gray-700 py-3 px-8 rounded-md border border-gray-300 hover:bg-gray-100 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 inline-block mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21l-1.45-1.32C5.4 15.36 3 12.28 3 9.14 3 5.66 5.66 3 9.14 3c1.74 0 3.41.81 4.5 2.09C14.45 3.81 16.12 3 17.86 3 21.34 3 24 5.66 24 9.14c0 3.14-2.4 6.22-7.55 10.54L12 21z"></path>
+                    </svg>
+                    Save for Later
+                </button>
+            </div>
+        </div>
+
+        <!-- Sidebar Section -->
+        <div class="lg:col-span-1 p-6 bg-gray-50 border-l border-gray-200 space-y-6">
+            <!-- Product Highlights -->
+            <div>
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Product Highlights</h2>
+                <ul class="list-disc pl-5 text-sm text-gray-600 space-y-2">
+                    <li>{{ product.highlight_1 }}</li>
+                    <li>{{ product.highlight_2 }}</li>
+                    <li>{{ product.highlight_3 }}</li>
+                </ul>
+            </div>
+
+            <!-- Return Policy -->
+            <div>
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Return Policy</h2>
+                <p class="text-sm text-gray-600">30-day free returns for all customers.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

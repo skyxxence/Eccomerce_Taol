@@ -1,0 +1,78 @@
+{% load static %}
+
+<header class="bg-gray-900 text-white sticky top-0 z-50 shadow-lg">
+    <div class="container mx-auto flex items-center justify-between p-4">
+        {% if user.is_authenticated and user.is_vendor%}
+        <!-- Logo Section -->
+            <div class="logo">
+                <a href="{% url 'vendor-product-list' %}">
+                    <img src= "{% static 'images/INI.png' %}" alt="E-Commerce Logo" class="h-12 sm:h-14 md:h-16 lg:h-20">
+                </a>
+            </div>
+        {% else %}
+            <div class="logo">
+                <a href="{% url 'go-home' %}">
+                    <img src= "{% static 'images/INI.png' %}" alt="E-Commerce Logo" class="h-12 sm:h-14 md:h-16 lg:h-20">
+                </a>
+            </div>
+        {%endif%}
+
+        <!-- Navigation Menu -->
+        <nav>
+            <ul class="flex space-x-6">
+                <li><a href="/categories" class="hover:text-yellow-400">Categories</a></li>
+                
+                <!-- Conditionally display the 'Sell on Taol' button only for vendors -->
+                {% if user.is_authenticated and user.is_vendor %}
+                    <li><a href="{% url 'vendor-add-product' %}" class="hover:text-yellow-400">Add Product</a></li>
+                {% elif user.is_authenticated %}
+                    <li><a href="{% url 'go-register-vendor' %}" class="hover:text-yellow-400">Sell on Taol</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <!-- Search Bar -->
+        <div class="flex items-center space-x-2">
+            <input type="text" placeholder="Search for products..." id="search-input" 
+                   class="p-2 text-black rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full max-w-md">
+        
+            <!-- Search Button -->
+            <button class="bg-yellow-400 text-white px-4 py-2 rounded hover:bg-yellow-500 focus:outline-none">
+                Search
+            </button>
+        </div>
+
+        <!-- User Profile and Cart -->
+        <div class="flex items-center space-x-6">
+            <!-- User Authentication (Login/Register) -->
+            {% if user.is_authenticated %}
+                <a href="{% url 'go-profile' %}" class="text-white hover:text-yellow-400">Welcome, {{ user.username }}</a>
+                
+                <form class="text-white hover:text-yellow-400" action="{% url 'go-logout' %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Logout"/>
+                </form>
+            {% else %}
+                <a href="{% url 'go-login'%}" class="text-white hover:text-yellow-400">Login/signup</a>
+            {% endif %}
+        </div>
+            
+        <!-- Cart Section (Clickable) -->
+        <div class="flex items-center space-x-2 text-white">
+            <!-- Cart Icon (using SVG or FontAwesome) -->
+            <!--  -->
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18l-1 12H4L3 3z"></path>
+                    <circle cx="9" cy="21" r="2" stroke="currentColor" stroke-width="2"></circle>
+                    <circle cx="18" cy="21" r="2" stroke="currentColor" stroke-width="2"></circle>
+                </svg>
+                <!-- Cart Text -->
+                <p class="text-xl font-semibold">My Cart</p>
+                <!-- Cart Item Count (badge) -->
+                <span class="bg-red-500 text-white rounded-full px-2 py-1 text-xs font-bold">
+                    {{ cart_item_count }} <!-- Dynamic Cart Count -->
+                </span>
+            
+        </div>
+    </div>
+</header>

@@ -1,0 +1,68 @@
+{% extends '_mybase.html' %}
+
+{% block title %} {{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+
+    <!-- Main Section: Product Details -->
+    <div class="lg:flex bg-white shadow-lg rounded-lg overflow-hidden">
+        <!-- Product Image Section -->
+        <div class="lg:w-1/3 p-6">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-auto object-contain rounded-lg shadow-md">
+        </div>
+
+        <!-- Product Information Section -->
+        <div class="lg:w-2/3 p-6 space-y-6">
+            <!-- Product Name -->
+            <h1 class="text-3xl font-semibold text-gray-800">{{ product.name }}</h1>
+            <!-- Product Description -->
+            <p class="text-lg text-gray-600">{{ product.description }}</p>
+            
+            <!-- Price and Category -->
+            <div>
+                <p class="text-2xl font-bold text-yellow-500">Price: #{{ product.price }}</p>
+                <p class="text-md text-gray-700 mt-2">Category: <span class="font-semibold">{{ product.category }}</span></p>
+            </div>
+
+            <!-- Vendor Information -->
+            <div>
+                <p class="text-sm text-gray-700">Sold by: <span class="font-semibold text-blue-500">{{ user.shop_name }}</span></p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex space-x-4 mt-6">
+                <!-- Edit Button -->
+                <a href="{% url 'vendor-edit-product' product.id %}" 
+                   class="bg-blue-500 text-white px-6 py-3 rounded-md shadow-md hover:bg-blue-600">
+                    Edit Product
+                </a>
+                <!-- Delete Button -->
+                <form method="POST" action="{% url 'vendor-delete-product' product.id %}">
+                    {% csrf_token %}
+                    <button type="submit" 
+                            class="bg-red-500 text-white px-6 py-3 rounded-md shadow-md hover:bg-red-600">
+                        Delete Product
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Section: Product Highlights and Policies -->
+    <div class="lg:w-1/4 p-6 bg-gray-50 mt-6 rounded-lg shadow-md">
+        <!-- Product Highlights -->
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Product Highlights</h2>
+        <ul class="list-disc pl-5 text-sm text-gray-600 space-y-2">
+            <li>{{ product.highlight_1 }}</li>
+            <li>{{ product.highlight_2 }}</li>
+            <li>{{ product.highlight_3 }}</li>
+        </ul>
+
+        <!-- Return Policy -->
+        <h2 class="text-xl font-semibold text-gray-800 mt-6 mb-4">Return Policy</h2>
+        <p class="text-sm text-gray-600">Free returns within 30 days for vendors.</p>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends '_mybase.html' %}
+
+{% block title %} user profile{% endblock %}
+
+{% block content %}
+
+<body class="bg-gray-50">
+    <div class="container mx-auto p-8">
+        <!-- Profile Header -->
+        <div class="mb-6">
+            <h1 class="text-3xl font-semibold text-gray-800">Welcome, {{ personal_info.name }}!</h1>
+        </div>
+        {%if user.is_vendor%}
+        <!-- Vendor Profile information section -->
+        <section class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-medium text-gray-700 mb-4">Personal Information</h2>
+            <div class="space-y-4">
+                <div>
+                    <p class="font-semibold text-gray-600">Name:</p>
+                    <p>{{ personal_info.name}}</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-600">Email:</p>
+                    <p>{{ personal_info.email }}</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-600">Business Number:</p>
+                    <p>{{ personal_info.phone_number }}</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-600">Shop Name:</p>
+                    <p>{{ personal_info.shop_name }}</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-600">Shop Address:</p>
+                    <p>{{ personal_info.shop_address }}</p>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a href="{% url 'go-edit-profile' %}" class="text-green-500 hover:text-green-700 font-medium">Edit Profile</a>
+            
+        </section>
+        {%else%}
+        <!-- user profile Information Section -->
+        <section class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-medium text-gray-700 mb-4">Personal Information</h2>
+            <div class="space-y-4">
+                <div>
+                    <p class="font-semibold text-gray-600">Name:</p>
+                    <p>{{ personal_info.name}}</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-600">Email:</p>
+                    <p>{{ personal_info.email }}</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-600">Phone Number:</p>
+                    <p>{{ personal_info.phone_number }}</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-600">Shipping Address:</p>
+                    <p>{{ personal_info.shipping_address }}</p>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a href="{% url 'go-edit-profile' %}" class="text-green-500 hover:text-green-700 font-medium">Edit Profile</a>
+            </div>
+        </section>
+
+
+        <!-- Add product -->
+
+        <section>
+            <!-- it will be aplace where vendor can see all product added -->
+        </section>
+        {%endif%}
+
+        <!-- Order History Section -->
+        <section class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-medium text-gray-700 mb-4">Your Order History</h2>
+            {% if orders %}
+                <ul class="space-y-4">
+                    {% for order in orders %}
+                        <li class="border-b py-4">
+                            <p><span class="font-semibold text-gray-600">Order ID:</span> {{ order.id }}</p>
+                            <p><span class="font-semibold text-gray-600">Status:</span> {{ order.status }}</p>
+                            <p><span class="font-semibold text-gray-600">Total Price:</span> ${{ order.total_price }}</p>
+                            <p><span class="font-semibold text-gray-600">Product:</span> {{ order.product_name }} ({{ order.quantity }})</p>
+                            <p><span class="font-semibold text-gray-600">Date:</span> {{ order.order_date }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-600">You have no orders yet.</p>
+            {% endif %}
+        </section>
+
+        <!-- Wishlist Section -->
+        <section class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-medium text-gray-700 mb-4">Your Wishlist</h2>
+            {% if wishlist_items %}
+                <ul class="space-y-4">
+                    {% for item in wishlist_items %}
+                        <li class="border-b py-4">
+                            <p><span class="font-semibold text-gray-600">Product:</span> {{ item.product_name }}</p>
+                            <p><span class="font-semibold text-gray-600">Added On:</span> {{ item.added_on }}</p>
+                            <button class="mt-2 text-red-500 hover:text-red-700 font-medium">Remove from Wishlist</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-600">Your wishlist is empty.</p>
+            {% endif %}
+        </section>
+    </div>
+{%endblock%}
+

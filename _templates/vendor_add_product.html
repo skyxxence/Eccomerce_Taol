@@ -1,0 +1,76 @@
+{% extends '_mybase.html' %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+    <h1 class="text-3xl font-bold mb-6">Add a New Product</h1>
+
+    <!-- Display messages -->
+    {% if messages %}
+        <ul class="messages mb-4">
+            {% for message in messages %}
+                <li class="{{ message.tags }} text-sm text-red-600">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" class="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg space-y-6">
+        {% csrf_token %}
+
+        <!-- Product Name -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="col-span-1">
+                <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
+                <input type="text" id="name" name="name" class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+            </div>
+
+            <!-- Product Price -->
+            <div class="col-span-1">
+                <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+                <input type="text" id="price" name="price" class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+            </div>
+        </div>
+
+        <!-- Discount Percentage -->
+        <div class="mb-4">
+            <label for="discount_percentage" class="block text-sm font-medium text-gray-700">Discount Percentage (if any)</label>
+            <input type="number" id="discount_percentage" name="discount_percentage" class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter discount percentage">
+        </div>
+
+        <!-- Product Description -->
+        <div>
+            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+            <textarea id="description" name="description" class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" rows="4" required></textarea>
+        </div>
+
+        <!-- Product Stock -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="col-span-1">
+                <label for="stock" class="block text-sm font-medium text-gray-700">Stock</label>
+                <input type="number" id="stock" name="stock" class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+            </div>
+
+            <!-- Product Category -->
+            <div class="col-span-1">
+                <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+                <select id="category" name="category" class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                    <option value="">Select Category</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- Product Image -->
+        <div>
+            <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
+            <input type="file" id="image" name="image" class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400">
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full bg-yellow-400 text-white px-4 py-3 rounded-md hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+            Add Product
+        </button>
+    </form>
+</div>
+{% endblock %}

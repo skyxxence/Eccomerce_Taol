@@ -1,0 +1,46 @@
+<!-- product_list.html -->
+
+{% extends '_mybase.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Product Container -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for product in products %}
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <!-- Product Image Section -->
+                <div class="flex-none mb-6">
+                    <a href="{% url 'vendor-product-details' product.id %}">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded-lg">
+                    </a>
+                </div>
+
+                <!-- Product Details Section -->
+                <div class="flex-grow">
+                    <!-- Product Name -->
+                    <a href="{% url 'vendor-product-details' product.id %}">
+                        <h1 class="text-xl font-semibold text-gray-900 mb-4 hover:underline">{{ product.name }}</h1>
+                    </a>
+
+                    <!-- Product Price -->
+                    <p class="text-lg font-bold text-yellow-500 mb-4">#{{ product.price }}</p>
+
+                    <!-- Product Category -->
+                    <p class="text-sm text-gray-700 mb-4">{{ product.category }}</p>
+
+                    <!-- Stock Available -->
+                    <p class="text-sm text-gray-700 mb-4">Stock Available: <span class="font-semibold">{{ product.stock }}</span> units</p>
+
+                    <!-- Product Description (optional) -->
+                    <p class="text-gray-600 mb-4">{{ product.description|truncatechars:30 }}</p>
+
+                    <p class="text-sm text-gray-700 mb-4">Sold by: <span class="font-semibold text-blue-400 italic">{{ product.vendor_creating_product }}</span></p>
+
+                    
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

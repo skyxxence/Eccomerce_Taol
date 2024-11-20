@@ -1,98 +1,50 @@
 {% extends '_mybase.html' %}
 
+{% block title %} Login{%endblock%}
+
+
 {% block content %}
-<div class="container mx-auto px-6 py-8">
-    <div class="flex">
-        <!-- Categories Section (Smaller width and fixed position) -->
-        <div class="w-2/12 bg-gray-200 p-4 rounded-md shadow-lg sticky top-0">
-            <h2 class="text-xl font-semibold text-center mb-4">Categories</h2>
-            <div class="relative">
-                <button class="bg-gray-800 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full text-left" id="category-dropdown-button">
-                    Categories
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 inline-block ml-2">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </button>
+<div class="flex items-center justify-center min-h-screen bg-gray-50">
+    <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
 
-                <!-- Dropdown Menu for Categories -->
-                <div class="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" id="category-dropdown">
-                    <div class="py-1">
-                        {% for category in categories %}
-                            <a href="{% url 'category-detail' category.id %}" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 {% if category.parent %} pl-6 text-gray-600 {% else %} text-black font-bold {% endif %}">
-                                {{ category.name }}
-                            </a>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Login to Your Account</h2>
 
-        <!-- Product Section -->
-        <div class="w-10/12 pl-6">
-            <h1 class="text-3xl font-semibold text-gray-900 mb-6">Our Products</h1>
+       
 
-            <!-- Product Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {% for product in page_obj %}
-                    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                        <!-- Fixed Image Size for Products -->
-                        <a href="{% url 'product-details' product.id %}">
-                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
-                        </a>
-                        <div class="p-4">
-                            <a href="{% url 'product-details' product.id %}">
-                                <h3 class="text-lg font-semibold text-gray-800">{{ product.name }}</h3>
-                            </a>
-                            <p class="text-sm text-gray-600 mt-1">{{ product.description|truncatechars:30 }}</p>
+        <form action="{% url 'go-login' %}" method="POST">
+            {% csrf_token %}
+    
+            {% if error %}
+                <p class = "text-red-500">{{error}}</p> 
+            {% endif %}
 
-                            <div class="mt-4 flex items-center justify-between">
-                                <!-- New Price (on the left, bold, and distinct) -->
-                                <p class="text-xl font-bold text-yellow-500">{{ product.discount_price|default:product.price|intcomma }}</p>
-
-                                <!-- Old Price (on the right with a strike-through) -->
-                                {% if product.discount_price %}
-                                    <p class="text-sm text-gray-400 line-through">{{ product.price|intcomma }}</p>
-                                {% endif %}
-
-                                <!-- Discount Percentage (on the same line) -->
-                                {% if product.discount_price %}
-                                    <p class="text-sm text-red-500 font-semibold">({{ product.discount_percentage }}% off)</p>
-                                {% endif %}
-                            </div>
-
-                            <!-- Add to Cart Button -->
-                            <form method="POST" action="{% url 'add-to-cart' product.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="mt-4 bg-yellow-400 text-white px-4 py-2 rounded hover:bg-yellow-500 w-full">
-                                    Add to Cart
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
+            {% if success %}
+            <p class = "text-green-500">{{success}}</p>
         
+            {% endif %}        
 
-
-            <!-- Pagination Controls -->
-            <div class="flex justify-center mt-6">
-                <span class="px-4 py-2 text-gray-600">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1" class="font-semibold">First</a>
-                        <a href="?page={{ page_obj.previous_page_number }}" class="mx-2 font-semibold">Previous</a>
-                    {% endif %}
-
-                    <span class="text-gray-700 font-semibold">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                    </span>
-
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}" class="mx-2 font-semibold">Next</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}" class="font-semibold">Last</a>
-                    {% endif %}
-                </span>
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="username" name="username" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your username" required>
             </div>
-        </div>
+
+            <div class="mb-6">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" name="password" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md text-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                Login
+            </button>
+
+            <div class="mt-4 text-center">
+                <p class="text-sm text-gray-600">
+                    Don't have an account? <a href="{% url 'go-register' %}" class="text-blue-600 hover:text-blue-700">Sign up</a>
+                </p>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}
+
+

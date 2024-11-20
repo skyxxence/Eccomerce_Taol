@@ -15,7 +15,7 @@ class Category(models.Model):
 
 class SubCategory(models.Model):
     name = models.CharField(max_length=255, unique=True)  # The category name (e.g., 'Electronics', 'Clothing', etc.)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)  # Link to category
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name='sub_category', null=True, blank=True)  # Link to category
 
     def __str__(self):
         return self.name
@@ -35,7 +35,7 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)  # Discount percentage
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=0, blank=True, null=True)  # Discount percentage
     stock = models.PositiveIntegerField(default=0)
     image = models.ImageField(upload_to='products/', null=True, blank=True)
     vendor_creating_product = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # Track which user is the vendor

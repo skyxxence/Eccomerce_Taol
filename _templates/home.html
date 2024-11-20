@@ -24,6 +24,24 @@
                         {% endfor %}
                     </div>
                 </div>
+
+                <!-- Dropdown Menu for Categories -->
+                <div class="origin-top-right top-64 absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" id="category-dropdown">
+                    <div class="py-1">
+                        {% for category_dict in cat_n_sub %}
+                            {% for category, subcategories in category_dict.items %}
+                            <a href="{% url 'get-by-category' category %}" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 {% if category.parent %} pl-6 text-gray-600 {% else %} text-black font-bold {% endif %}">
+                                {{ category }}
+                            </a>
+                            {% for subcategory in subcategories %}
+                                <a href="{% url 'get-by-subcategory' subcategory %}">{{subcategory}}</a>
+                            {% endfor %}
+                            {% endfor %}
+
+                        {% endfor %}
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -41,7 +59,7 @@
                         </a>
                         <div class="p-4">
                             <a href="{% url 'product-details' product.id %}">
-                                <h3 class="text-lg font-semibold text-gray-800">{{ product.name|truncatechars:40 }}</h3>
+                                <h3 class="text-lg font-semibold text-gray-800">{{ product.name|truncatechars:20 }}</h3>
                             </a>
 
                             <div class="flex items-center justify-between">

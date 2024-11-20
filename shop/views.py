@@ -13,6 +13,8 @@ def vendor_add_product(request):
     
     # Fetch top-level categories (parent categories) and their subcategories
     categories = Category.objects.filter(parent__isnull=True)
+    subcategories = SubCategory.objects.all()
+   
 
     if request.method == 'POST':
         # Get form data from POST request
@@ -56,7 +58,7 @@ def vendor_add_product(request):
                 category=category,
                 image=image,
                 discount_percentage=discount_percentage,  # Saving the discount percentage
-                discount_price=discount_price  # Saving the calculated discount price
+                # discount_price=discount_price  # Saving the calculated discount price
             )
 
             # Redirect to product list or success page after creation
@@ -68,7 +70,7 @@ def vendor_add_product(request):
             return render(request, 'vendor_add_product.html', {'categories': categories})
 
     # If the request is GET, pass categories and subcategories to the template
-    return render(request, 'vendor_add_product.html', {'categories': categories})
+    return render(request, 'vendor_add_product.html', {'categories': categories, 'subcategories':subcategories})
 
 
 def vendor_edit_product(request, product_id):
@@ -172,17 +174,59 @@ def homeview(request):
 
     # Fetch categories (this stays the same)
     categories = Category.objects.all()
+    categories_n_sub=SubCategory.objects.select_related('category')
+    categories_n_sub_list=[]
+    categories_list=[]
+    for cat in categories_n_sub:
+        # categories_n_sub_list.append({
+        #     'category':cat.category.name,
+        #     'subcategory':[cat.name for category in cat]
+        # })
+        categories_n_sub_list.append({
+            'category':cat.category.name,
+            'subcategory':cat.name
+        })
+        categories_list.append(cat.category.name)
+        
+    unique_categories_list=list(set(categories_list))
+    
+    grouped_data = {}
 
-    # Paginate the products (optional, if you have many products)
+# Loop through the subcategories and group them by their category
+    for item in categories_n_sub_list:
+        category = item['category']
+        subcategory = item['subcategory']
+        
+        # If the category does not exist in the dictionary, add it with an empty list
+        if category not in grouped_data:
+            grouped_data[category] = []
+        
+        # Append the subcategory to the appropriate category
+        grouped_data[category].append(subcategory)
+
+    # Convert the grouped data to the desired format
+    result = [{category: subcategories} for category, subcategories in grouped_data.items()]
+
+    # Print the result
+    print(result)
+    
+    
+    
+    subcategory = Category.objects.all()
+
+    # Paginate the products (optional, if you /have many products)
     paginator = Paginator(products, 18)  # Show 12 products per page
     page_number = request.GET.get('page')  # Get the page number from the query string
     page_obj = paginator.get_page(page_number)  # Get the page object based on the page number
 
-    return render(request, 'home.html', {'page_obj': page_obj, 'categories': categories})
+    return render(request, 'home.html', {'page_obj': page_obj, 'categories': categories, 'cat_n_sub':result})
 
-def products_by_category(request,category_id):
+def products_by_category(request,category_name):
+    
     # Check if the user is authenticated and whether they are a vendor
     if request.user.is_authenticated:
+        category_to_sort_by=Category.objects.get(name=category_name)
+        category_id=category_to_sort_by.id
         if request.user.is_vendor:
             # Vendor view: Show only products by the logged-in vendor
             products = Product.objects.filter(vendor_creating_product=request.user,category_id=category_id)
@@ -192,6 +236,31 @@ def products_by_category(request,category_id):
     else:
         # Non-logged-in users: Show all products from all vendors
         products = Product.objects.filter(category_id=category_id)
+
+    # Fetch categories (this stays the same)
+    categories = Category.objects.all()
+
+    # Paginate the products (optional, if you have many products)
+    paginator = Paginator(products, 18)  # Show 12 products per page
+    page_number = request.GET.get('page')  # Get the page number from the query string
+    page_obj = paginator.get_page(page_number)  # Get the page object based on the page number
+
+    return render(request, 'home.html', {'page_obj': page_obj, 'categories': categories})
+def products_by_subcategory(request,subcategory_name):
+    
+    # Check if the user is authenticated and whether they are a vendor
+    if request.user.is_authenticated:
+        subcategory_to_sort_by=SubCategory.objects.get(name=subcategory_name)
+        subcategory_id=subcategory_to_sort_by.id
+        if request.user.is_vendor:
+            # Vendor view: Show only products by the logged-in vendor
+            products = Product.objects.filter(vendor_creating_product=request.user,subcategory_id=subcategory_id)
+        else:
+            # Buyer view: Show all products
+            products = Product.objects.filter(subcategory_id=subcategory_id)
+    else:
+        # Non-logged-in users: Show all products from all vendors
+        products = Product.objects.filter(subcategory_id=subcategory_id)
 
     # Fetch categories (this stays the same)
     categories = Category.objects.all()

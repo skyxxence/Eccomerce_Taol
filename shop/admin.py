@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category
+from .models import Category, SubCategory
 
 class CategoryAdmin(admin.ModelAdmin):
     # Display the category name and its parent category in the list view
@@ -25,3 +25,4 @@ class CategoryAdmin(admin.ModelAdmin):
 
 # Register the Category model with the admin
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(SubCategory)

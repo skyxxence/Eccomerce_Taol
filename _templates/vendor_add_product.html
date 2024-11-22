@@ -60,13 +60,15 @@
                 </select>
             </div>
         </div>
+        
             <!--sub Product Category -->
             <div class="col-span-1">
                 <label for="subcategory" class="block text-sm font-medium text-gray-700">Subategory</label>
-                <select id="subcategory" name="subcategory" class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                <select id="subcategory" name="subcategory" class="mt-1 block w-full p-3 border text-gray-600 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400">
                     <option value="">Select Subcategory</option>
                     {% for subcategory in subcategories %}
-                        <option value="{{ subcategory.id }}">{{ subcategory.name }}</option>
+                        
+                        <option class="text-gray-700" value="{{ subcategory.id }}">{{ subcategory.name }}</option>
                     {% endfor %}
                 </select>
             </div>

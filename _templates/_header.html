@@ -6,13 +6,18 @@
         <!-- Logo Section -->
             <div class="logo">
                 <a href="{% url 'vendor-product-list' %}">
-                    <img src= "{% static 'images/INI.png' %}" alt="E-Commerce Logo" class="h-12 sm:h-14 md:h-16 lg:h-20">
+                    <div class="text-4xl font-extrabold text-yellow-600">
+                        TAOL
+                    </div>
                 </a>
             </div>
         {% else %}
             <div class="logo">
                 <a href="{% url 'go-home' %}">
-                    <img src= "{% static 'images/INI.png' %}" alt="E-Commerce Logo" class="h-12 sm:h-14 md:h-16 lg:h-20">
+                    <!-- Logo Text (TAOL) -->
+                    <div class="text-4xl font-extrabold text-yellow-600">
+                        TAOL
+                    </div><!-- <img src= "{% static 'images/taol.png' %}" alt="E-Commerce Logo" class="h-12 sm:h-14 md:h-16 lg:h-20"> -->
                 </a>
             </div>
         {%endif%}
@@ -20,12 +25,13 @@
         <!-- Navigation Menu -->
         <nav>
             <ul class="flex space-x-6">
-                <li><a href="/categories" class="hover:text-yellow-400">Categories</a></li>
                 
                 <!-- Conditionally display the 'Sell on Taol' button only for vendors -->
                 {% if user.is_authenticated and user.is_vendor %}
                     <li><a href="{% url 'vendor-add-product' %}" class="hover:text-yellow-400">Add Product</a></li>
                 {% elif user.is_authenticated %}
+                    <li><a href="{% url 'go-register-vendor' %}" class="hover:text-yellow-400">Sell on Taol</a></li>
+                {% elif not user.is_authenticated %}
                     <li><a href="{% url 'go-register-vendor' %}" class="hover:text-yellow-400">Sell on Taol</a></li>
                 {% endif %}
             </ul>
@@ -60,7 +66,7 @@
         <!-- Cart Section (Clickable) -->
         <div class="flex items-center space-x-2 text-white">
             <!-- Cart Icon (using SVG or FontAwesome) -->
-            <!--  -->
+            <a href="{% url 'cart-view' %}" class="flex items-center space-x-2">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18l-1 12H4L3 3z"></path>
                     <circle cx="9" cy="21" r="2" stroke="currentColor" stroke-width="2"></circle>
@@ -68,11 +74,13 @@
                 </svg>
                 <!-- Cart Text -->
                 <p class="text-xl font-semibold">My Cart</p>
-                <!-- Cart Item Count (badge) -->
-                <span class="bg-red-500 text-white rounded-full px-2 py-1 text-xs font-bold">
-                    {{ cart_item_count }} <!-- Dynamic Cart Count -->
-                </span>
+            </a>
             
+            <!-- Cart Item Count (badge) -->
+            <span class="bg-red-500 text-white rounded-full px-2 py-1 text-xs font-bold">
+                {{ cart_item_count }} <!-- Dynamic Cart Count -->
+            </span>
         </div>
+        
     </div>
 </header>

@@ -1,0 +1,73 @@
+{% extends '_mybase.html' %}
+
+{% block content %}
+<h1 class="text-3xl font-semibold text-gray-900 mb-6 px-16">Your Cart</h1>
+
+{% if cart_items.count == 0 %}
+    <p>Your cart is empty.</p>
+{% else %}
+    <div class="cart-items space-y-4 px-16">
+        <!-- Table headers for the cart items -->
+        <div class="cart-header grid grid-cols-5 gap-6 font-semibold text-lg text-gray-800 mb-4">
+            <div class="col-span-1">Item Details</div>
+            <div class="col-span-1 text-center">Quantity</div>
+            <div class="col-span-1 text-center">Price</div>
+            <div class="col-span-1 text-center">Total</div>
+            <div class="col-span-1 text-center">Action</div>
+        </div>
+
+        {% for cart_item in cart_items %}
+            <div class="cart-item flex items-center justify-between p-4 border-b">
+                <!-- Product Image and Name (Item Details) -->
+                <div class="cart-item-details flex items-center col-span-1 space-x-4">
+                    <img src="{{ cart_item.product.image.url }}" alt="{{ cart_item.product.name }}" class="w-16 h-16 object-cover rounded-lg">
+                    <div class="ml-4 flex-grow">
+                        <p class="text-lg">{{ cart_item.product.name|truncatechars:10 }}</p>
+                    </div>
+                </div>
+
+                <!-- Quantity -->
+                <div class="cart-item-quantity flex items-center justify-center col-span-1">
+                    <form method="POST" action="{% url 'add-to-cart' cart_item.product.id %}">
+                        {% csrf_token %}
+                        <button type="submit" name="decrease" class="text-gray-600 bg-yellow-400 hover:bg-yellow-500 py-1 px-2 rounded-full font-semibold">-</button>
+                        <input type="text" value="{{ cart_item.quantity }}" disabled class="mx-2 w-16 text-center border-gray-300 font-semibold text-lg">
+                        <button type="submit" name="increase" class="text-gray-600 bg-yellow-400 hover:bg-yellow-500 py-1 px-2 rounded-full font-semibold">+</button>
+                    </form>
+                </div>
+
+                <!-- Price -->
+                <div class="cart-item-price text-center col-span-1">
+                    <p class="text-lg">#{{ cart_item.product.discounted_price|floatformat:2 }}</p>
+                </div>
+
+                <!-- Total -->
+                <div class="cart-item-total text-center col-span-1">
+                    <p class="text-lg">#{{ cart_item.product_price|floatformat:2 }} x {{ cart_item.quantity }} = #{{ cart_item.total_price|floatformat:2 }}</p>
+                </div>
+
+                <!-- Remove Button -->
+                <div class="cart-item-action text-center col-span-1">
+                    <form method="POST" action="{% url 'remove-from-cart' cart_item.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-600 hover:text-red-800 font-semibold">Remove</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Display Total Price -->
+    <div class="mt-6">
+        <h3 class="text-xl font-semibold text-gray-800 px-16">Total Price: #{{ total_price|floatformat:2 }}</h3>
+    </div>
+{% endif %}
+
+<!-- Proceed to Checkout Button -->
+<div class="mt-8 px-16">
+    <a href="/checkout" class="bg-yellow-400 text-white px-4 py-2 rounded hover:bg-yellow-500 font-semibold">
+        Proceed to Checkout
+    </a>
+</div>
+
+{% endblock %}

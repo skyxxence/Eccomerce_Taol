@@ -15,32 +15,23 @@
                 </button>
 
                 <!-- Dropdown Menu for Categories -->
-                <div class="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" id="category-dropdown">
-                    <div class="py-1">
-                        {% for category in categories %}
-                            <a href="{% url 'category-detail' category.id %}" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 {% if category.parent %} pl-6 text-gray-600 {% else %} text-black font-bold {% endif %}">
-                                {{ category.name }}
-                            </a>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <!-- Dropdown Menu for Categories -->
-                <div class="origin-top-right top-64 absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" id="category-dropdown">
+                <div class="origin-top-right right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" id="category-dropdown">
                     <div class="py-1">
                         {% for category_dict in cat_n_sub %}
                             {% for category, subcategories in category_dict.items %}
-                            <a href="{% url 'get-by-category' category %}" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 {% if category.parent %} pl-6 text-gray-600 {% else %} text-black font-bold {% endif %}">
+                            <a href="{% url 'get-by-category' category %}" class="text-gray-700 block px-2 py-2 text-sm hover:bg-gray-100 {% if category.parent %} pl-6 text-gray-600 {% else %} text-black font-bold {% endif %}">
                                 {{ category }}
                             </a>
                             {% for subcategory in subcategories %}
-                                <a href="{% url 'get-by-subcategory' subcategory %}">{{subcategory}}</a>
+                                <a href="{% url 'get-by-subcategory' subcategory %}" class="px-2 text-xs py-1 block ">{{subcategory}}</a>
                             {% endfor %}
                             {% endfor %}
 
                         {% endfor %}
                     </div>
-                </div>
+
+                
+                </div><!-- Dropdown Menu for Categories -->
 
             </div>
         </div>
@@ -79,12 +70,14 @@
                             
 
                             <!-- Add to Cart Button -->
-                            <form method="POST" action="{% url 'add-to-cart' product.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="mt-4 bg-yellow-400 text-white px-4 py-2 rounded hover:bg-yellow-500 w-full">
-                                    Add to Cart
-                                </button>
-                            </form>
+                            <a href="{% url 'add-to-cart' product.id %}"    >
+                                <form method="POST" action="{% url 'add-to-cart' product.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="mt-4 bg-yellow-400 text-white px-4 py-2 rounded hover:bg-yellow-500 w-full">
+                                        Add to Cart
+                                    </button>
+                                </form>
+                            </a>
                         </div>
                     </div>
                 {% endfor %}

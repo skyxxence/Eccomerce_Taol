@@ -54,9 +54,18 @@
             </div>
 
             <!-- Add to Cart and Save for Later -->
+             
             <div class="flex space-x-4 mt-6">
-                <button class="bg-yellow-500 text-white py-3 px-8 rounded-md shadow-md hover:bg-yellow-600 focus:outline-none">Add to Cart</button>
-                <button class="text-gray-700 py-3 px-8 rounded-md border border-gray-300 hover:bg-gray-100 focus:outline-none">
+
+                <a href="{% url 'add-to-cart' product.id %}">
+                    <form method="POST" action="{% url 'add-to-cart' product.id %}">
+                        {% csrf_token %}
+                        <button class="bg-yellow-500 text-white py-3 px-16 rounded-md shadow-md hover:bg-yellow-600 focus:outline-none">
+                            Add to Cart
+                        </button>
+                    </form>
+                </a>
+                <button class="text-gray-700 py-3 px-16 rounded-md border border-gray-300 hover:bg-gray-100 focus:outline-none">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 inline-block mr-2">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21l-1.45-1.32C5.4 15.36 3 12.28 3 9.14 3 5.66 5.66 3 9.14 3c1.74 0 3.41.81 4.5 2.09C14.45 3.81 16.12 3 17.86 3 21.34 3 24 5.66 24 9.14c0 3.14-2.4 6.22-7.55 10.54L12 21z"></path>
                     </svg>

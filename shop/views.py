@@ -77,6 +77,7 @@ def vendor_edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
     if request.method == 'POST':
+        print(request.POST)
         name = request.POST.get('name')
         price = request.POST.get('price')
         discount_percentage = request.POST.get('discount_percentage')  # Only handling discount percentage
@@ -118,14 +119,16 @@ def vendor_edit_product(request, product_id):
 
         # Save the updated product
         product.save()
-
+        print(f'product id is : {product.id}')
         # Display a success message and redirect to the product detail page
         messages.success(request, f"Product '{product.name}' updated successfully!")
-        return redirect('vendor-product-detail', product_id=product.id)
+        return redirect('vendor-product-details', product_id=product.id)
+    
 
     # Pass the current product data and categories to the template
     categories = Category.objects.all()
-    return render(request, 'vendor_edit_product.html', {'product': product, 'categories': categories})
+    subcategories = SubCategory.objects.all()
+    return render(request, 'vendor_edit_product.html', {'product': product, 'categories': categories, 'subcategories':subcategories})
 
 
 @login_required
@@ -206,12 +209,6 @@ def homeview(request):
 
     # Convert the grouped data to the desired format
     result = [{category: subcategories} for category, subcategories in grouped_data.items()]
-
-    # Print the result
-    print(result)
-    
-    
-    
     subcategory = Category.objects.all()
 
     # Paginate the products (optional, if you /have many products)
@@ -222,6 +219,8 @@ def homeview(request):
     return render(request, 'home.html', {'page_obj': page_obj, 'categories': categories, 'cat_n_sub':result})
 
 def products_by_category(request,category_name):
+    
+    show_dropdown = request.GET.get('toggle') == 'true'
     
     # Check if the user is authenticated and whether they are a vendor
     if request.user.is_authenticated:
@@ -239,14 +238,50 @@ def products_by_category(request,category_name):
 
     # Fetch categories (this stays the same)
     categories = Category.objects.all()
+    categories = Category.objects.all()
+    categories_n_sub=SubCategory.objects.select_related('category')
+    categories_n_sub_list=[]
+    categories_list=[]
+    for cat in categories_n_sub:
+        # categories_n_sub_list.append({
+        #     'category':cat.category.name,
+        #     'subcategory':[cat.name for category in cat]
+        # })
+        categories_n_sub_list.append({
+            'category':cat.category.name,
+            'subcategory':cat.name
+        })
+        categories_list.append(cat.category.name)
+        
+    unique_categories_list=list(set(categories_list))
+    
+    grouped_data = {}
+
+# Loop through the subcategories and group them by their category
+    for item in categories_n_sub_list:
+        category = item['category']
+        subcategory = item['subcategory']
+        
+        # If the category does not exist in the dictionary, add it with an empty list
+        if category not in grouped_data:
+            grouped_data[category] = []
+        
+        # Append the subcategory to the appropriate category
+        grouped_data[category].append(subcategory)
+
+    # Convert the grouped data to the desired format
+    result = [{category: subcategories} for category, subcategories in grouped_data.items()]
+    subcategory = Category.objects.all()
 
     # Paginate the products (optional, if you have many products)
     paginator = Paginator(products, 18)  # Show 12 products per page
     page_number = request.GET.get('page')  # Get the page number from the query string
     page_obj = paginator.get_page(page_number)  # Get the page object based on the page number
 
-    return render(request, 'home.html', {'page_obj': page_obj, 'categories': categories})
+    return render(request, 'home.html', {'page_obj': page_obj, 'categories': categories, 'show_dropdown': show_dropdown, 'cat_n_sub':result})
+
 def products_by_subcategory(request,subcategory_name):
+    show_dropdown = request.GET.get('toggle') == 'true'
     
     # Check if the user is authenticated and whether they are a vendor
     if request.user.is_authenticated:
@@ -264,13 +299,47 @@ def products_by_subcategory(request,subcategory_name):
 
     # Fetch categories (this stays the same)
     categories = Category.objects.all()
+    categories_n_sub=SubCategory.objects.select_related('category')
+    categories_n_sub_list=[]
+    categories_list=[]
+    for cat in categories_n_sub:
+        # categories_n_sub_list.append({
+        #     'category':cat.category.name,
+        #     'subcategory':[cat.name for category in cat]
+        # })
+        categories_n_sub_list.append({
+            'category':cat.category.name,
+            'subcategory':cat.name
+        })
+        categories_list.append(cat.category.name)
+        
+    unique_categories_list=list(set(categories_list))
+    
+    grouped_data = {}
+
+# Loop through the subcategories and group them by their category
+    for item in categories_n_sub_list:
+        category = item['category']
+        subcategory = item['subcategory']
+        
+        # If the category does not exist in the dictionary, add it with an empty list
+        if category not in grouped_data:
+            grouped_data[category] = []
+        
+        # Append the subcategory to the appropriate category
+        grouped_data[category].append(subcategory)
+
+    # Convert the grouped data to the desired format
+    result = [{category: subcategories} for category, subcategories in grouped_data.items()]
+    subcategory = Category.objects.all()
+
 
     # Paginate the products (optional, if you have many products)
     paginator = Paginator(products, 18)  # Show 12 products per page
     page_number = request.GET.get('page')  # Get the page number from the query string
     page_obj = paginator.get_page(page_number)  # Get the page object based on the page number
 
-    return render(request, 'home.html', {'page_obj': page_obj, 'categories': categories})
+    return render(request, 'home.html', {'page_obj': page_obj, 'categories': categories, 'show_dropdown': show_dropdown,  'cat_n_sub':result})
 
 
 
@@ -285,67 +354,102 @@ def category_detail(request, category_id):
     products = Product.objects.filter(category=category)
     return render(request, 'category_detail.html', {'category': category, 'products': products})
 
-# views.py
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .models import Product
 
 def add_to_cart(request, product_id):
-    # Fetch the product
-    product = get_object_or_404(Product, id=product_id)
-
-    # Get the cart from the session (a dictionary)
-    cart = request.session.get('cart', {})
-
-    # If the product is already in the cart, increase its quantity
-    if product_id in cart:
-        cart[product_id]['quantity'] += 1
-    else:
-        # If the product is not in the cart, add it
-        cart[product_id] = {
-            'name': product.name,
-            'price': product.price,
-            'quantity': 1,
-            'image': product.image.url
-        }
-
-    # Save the updated cart in the session
-    request.session['cart'] = cart
-
-    # Show success message
-    messages.success(request, f"{product.name} has been added to your cart!")
-
-    # Redirect to the homepage or cart page
-    return redirect('home')  # Or wherever you want to redirect
-
-def view_cart(request):
-    cart = request.session.get('cart', {})
-    return render(request, 'cart.html', {'cart': cart})
-
-# views.py
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Product
-from django.contrib.auth.decorators import login_required
-from .models import Cart
-
-# View for displaying the product details
-def product_detail(request, product_id):
-    # Fetch the product by its ID, or return a 404 if it doesn't exist
     product = get_object_or_404(Product, id=product_id)
 
     # Handle the add to cart functionality
     if request.method == 'POST' and request.user.is_authenticated:
-        # Logic for adding product to the cart goes here
-        # For example, adding the product to the user's cart
+        # Get or create the cart for the logged-in user
         cart, created = Cart.objects.get_or_create(user=request.user)
-        cart.items.add(product)  # Assuming Cart model has a many-to-many relation with Product
-        cart.save()
+
+        # Check if the product already exists in the cart
+        cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+
+        if item_created:
+            # If the cart item is created, set its quantity to 1
+            cart_item.quantity = 1
+        else:
+            # If the cart item exists, increase the quantity
+            if 'increase' in request.POST:
+                cart_item.quantity += 1
+            elif 'decrease' in request.POST and cart_item.quantity > 1:
+                cart_item.quantity -= 1
+
+        cart_item.save()
+
+        # Provide success feedback
+        messages.success(request, f'Updated {product.name} quantity in your cart')
 
         # Optionally, show a success message or redirect to cart
         return redirect('cart-view')  # Redirect to the cart view
 
-    return render(request, 'product_detail.html', {'product': product})
+    return render(request, 'product_details.html', {'product': product})
+
+@login_required
+def cart_view(request):
+    # Get or create the cart for the logged-in user
+    cart, created = Cart.objects.get_or_create(user=request.user)
+
+    # Get all cart items with product and quantity
+    cart_items = cart.cart_items.all()
+
+    # Calculate total price using discounted price if available, otherwise regular price
+    for item in cart_items:
+        item.product_price = item.product.discounted_price if item.product.discounted_price != item.product.price else item.product.price
+        item.total_price = item.product_price * item.quantity  # Calculate total price for each item
+
+    # Calculate the total price for the cart
+    total_price = sum(item.total_price for item in cart_items)
+
+    # Pass the cart, cart_items, and total_price to the template
+    return render(request, 'cart_view.html', {
+        'cart': cart,
+        'cart_items': cart_items,
+        'total_price': total_price,
+    })
+
+@login_required
+def remove_from_cart(request, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id)
+
+    # Ensure the cart item belongs to the logged-in user's cart
+    if cart_item.cart.user == request.user:
+        cart_item.delete()
+        messages.success(request, 'Product removed from your cart.')
+    else:
+        messages.error(request, 'You cannot remove this item.')
+
+    return redirect('cart-view')  # Redirect back to the cart view
+
+
+
+# @login_required
+# def cart_view(request):
+#     cart = Cart.objects.get(user=request.user)
+#     products = cart.items.all()
+#     total_price = sum(item.price for item in products)
+#     return render(request, 'cart_view.html', {'cart': cart, 'products': products, 'total_price': total_price})
+
+
+# @login_required
+# def add_to_cart(request, product_id):
+#     product = get_object_or_404(Product, id=product_id)
+#     cart, created = Cart.objects.get_or_create(user=request.user)
+#     cart.items.add(product)
+#     return redirect('cart_detail')  # Redirect to the cart detail page
+
+# @login_required
+# def cart_detail(request):
+#     cart = Cart.objects.get(user=request.user)
+#     products = cart.items.all()
+#     total_price = sum(item.price for item in products)
+#     return render(request, 'cart_detail.html', {'cart': cart, 'products': products, 'total_price': total_price})
+
+
+
+
+
 
 
 

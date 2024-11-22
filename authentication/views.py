@@ -132,9 +132,6 @@ def profile_view(request):
             'shop_name': user.shop_name
             }
         
-    #     'phone_number': user.profile.phone_number,  # Access the profile model
-    #     'shipping_address': user.profile.shipping_address  # Access the profile model
-    # print('check this: ', personal_info['name'])
     return render(request, 'profile.html', {'personal_info':personal_info})
 
 
@@ -149,7 +146,7 @@ def edit_profile_view(request):
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         phone_number = request.POST.get('phone_number')
-        shipping_address = request.POST.get('shipping_address')
+        address = request.POST.get('address')
         shop_address = request.POST.get('shop_address')
         shop_name = request.POST.get('shop_name')
 
@@ -158,7 +155,7 @@ def edit_profile_view(request):
         user.last_name = last_name
         user.email = email
         user.phone_number = phone_number
-        user.shipping_address = shipping_address
+        user.address = address
         user.shop_address = shop_address
         user.shop_name = shop_name
         user.save()

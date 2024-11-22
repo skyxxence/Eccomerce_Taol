@@ -44,7 +44,7 @@
             <div>
                 <label for="shipping_address" class="block text-sm font-medium text-gray-700">Shipping Address</label>
                 <textarea name="shipping_address" id="shipping_address" rows="4" 
-                            class="mt-1 p-3 w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700">{{ user.shipping_address }}</textarea>
+                            class="mt-1 p-3 w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700">{{ user.address }}</textarea>
             </div>
 
             <!-- Shop Address -->
@@ -69,47 +69,47 @@
                 </button>
             </div>
         {%else%}
-        <div>
-            <label for="first_name" class="block text-sm font-medium text-gray-700">First Name</label>
-            <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" 
-                   class="mt-1 p-3 w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700">
-        </div>
+            <div>
+                <label for="first_name" class="block text-sm font-medium text-gray-700">First Name</label>
+                <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" 
+                    class="mt-1 p-3 w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700">
+            </div>
 
-        <!-- Last Name -->
-        <div>
-            <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name</label>
-            <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" 
-                   class="mt-1 p-3 w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700">
-        </div>
+            <!-- Last Name -->
+            <div>
+                <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name</label>
+                <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" 
+                    class="mt-1 p-3 w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700">
+            </div>
 
-        <!-- Email -->
-        <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-            <input type="email" name="email" id="email" value="{{ user.email }}" 
-                   class="mt-1 p-3 w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700">
-        </div>
+            <!-- Email -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" name="email" id="email" value="{{ user.email }}" 
+                    class="mt-1 p-3 w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700">
+            </div>
 
-        <!-- Phone Number -->
-        <div>
-            <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number</label>
-            <input type="text" name="phone_number" id="phone_number" value="{{ user.phone_number }}" 
-                   class="mt-1 p-3 w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700">
-        </div>
+            <!-- Phone Number -->
+            <div>
+                <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                <input type="text" name="phone_number" id="phone_number" value="{{ user.phone_number }}" 
+                    class="mt-1 p-3 w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700">
+            </div>
 
-        <!-- Shipping Address -->
-        <div>
-            <label for="shipping_address" class="block text-sm font-medium text-gray-700">Shipping Address</label>
-            <textarea name="shipping_address" id="shipping_address" rows="4" 
-                      class="mt-1 p-3 w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700">{{ user.shipping_address }}</textarea>
-        </div>
-        <!-- Submit Button -->
-        <div class="flex justify-center">
-            <button type="submit" 
-                    class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                Save Changes
-            </button>
-        </div>
-        
+            <!-- Shipping Address -->
+            <div>
+                <label for="shipping_address" class="block text-sm font-medium text-gray-700">Shipping Address</label>
+                <textarea name="shipping_address" id="shipping_address" rows="4" 
+                            class="mt-1 p-3 w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700">{{ user.address }}</textarea>
+            </div>
+            <!-- Submit Button -->
+            <div class="flex justify-center">
+                <button type="submit" 
+                        class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    Save Changes
+                </button>
+            </div>
+            
         {%endif%}
         {%if messages %}
             {% for message in messages%}

@@ -23,7 +23,7 @@
                     </a>
 
                     <!-- Product Price -->
-                    <p class="text-lg font-bold text-yellow-500 mb-4">#{{ product.price }}</p>
+                    <p class="text-lg font-bold text-yellow-500 mb-4">{{ product.formatted_price }}</p>
 
                     <!-- Product Category -->
                     <p class="text-sm text-gray-700 mb-4">{{ product.category }}</p>
@@ -34,7 +34,7 @@
                     <!-- Product Description (optional) -->
                     <p class="text-gray-600 mb-4">{{ product.description|truncatechars:30 }}</p>
 
-                    <p class="text-sm text-gray-700 mb-4">Sold by: <span class="font-semibold text-blue-400 italic">{{ product.vendor_creating_product }}</span></p>
+                    
 
                     
                 </div>
